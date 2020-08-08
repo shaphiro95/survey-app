@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1, 
+  "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "survey-app": {
@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "survey-app"
+    }
+  },
+  "defaultProject": "survey-app",
+  "cli": {
+    "analytics": "ade6439c-3e63-4fb6-a329-636ec3ab8909"
+  }
 }
