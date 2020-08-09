@@ -51,14 +51,11 @@ export class NewSurveyComponent implements OnInit {
       return;
     }
 
-    const survey: Survey  = JSON.parse(this.surveyForm.value.survey);
+    const survey = JSON.parse(this.surveyForm.value.survey);
 
-    const ajv = new Ajv();
-    const validate = ajv.compile(this.jsonFormObject);
-    this.isValid = validate(survey);
+    this.validateBySchema(survey);
 
     if (!this.isValid) {
-      this.schemaErrors = validate.errors;
       return;
     }
 
@@ -68,4 +65,12 @@ export class NewSurveyComponent implements OnInit {
   onShow(): void {
 
   }
+
+  validateBySchema(data): void {
+    const ajv = new Ajv();
+    const validate = ajv.compile(this.jsonFormObject);
+    this.isValid = validate(data);
+    this.schemaErrors = validate.errors;
+  }
+
 }
