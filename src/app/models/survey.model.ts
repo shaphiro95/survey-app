@@ -1,7 +1,6 @@
 import { Question } from './question.model';
 
-export interface Survey {
-  id: string;
+export class Survey {
   title: string;
   questions: Question[];
 }

@@ -1,3 +1,6 @@
+<div *ngIf="newSurvey">
+  {{ newSurvey.title }}
+</div>
 <div class="container-fluid">
   <div class="row">
     <div class="col-xs-20">
@@ -19,7 +22,13 @@
       </div>
       <div class="row" *ngIf="isExampleVisible">
         <div class="col-xs-20">
-          <textarea id="example" type="text" readonly="true" disabled="true" #exampleTxtArea>
+          <textarea
+            id="example"
+            type="text"
+            readonly="true"
+            disabled="true"
+            #exampleTxtArea
+          >
     {
       "title": "New survey",
       "questions": [
@@ -42,7 +51,10 @@
           </textarea>
         </div>
         <div class="col-xs-12">
-          <button class="btn btn-light" (click)="copyInputMessage(exampleTxtArea)">
+          <button
+            class="btn btn-light"
+            (click)="copyInputMessage(exampleTxtArea)"
+          >
             Copy
           </button>
         </div>
@@ -76,22 +88,32 @@
           <div *ngFor="let e of schemaErrors">
             <div class="row">
               <div class="col-xs-20">
-                <div
-                  class="alert alert-danger"
-                  role="alert"
-                >
-                  {{ e.dataPath}} {{ e.message }}
+                <div class="alert alert-danger" role="alert">
+                  {{ e.dataPath }} {{ e.message }}
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-xs-12">
-            <button id="show-btn" class="btn btn-primary" (click)="onShow()">
-              Show
-            </button>
+        <div *ngIf="firebaseError">
+          <div class="row">
+            <div class="col-xs-20">
+              <div class="alert alert-danger" role="alert">
+                {{ firebaseError }}
+              </div>
+            </div>
           </div>
+        </div>
+        <div *ngIf="newSurveyId">
+          <div class="row">
+            <div class="col-xs-20">
+              <div class="alert alert-success" role="alert">
+                Survey created, id: {{ newSurveyId }}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
           <div class="col-xs-12">
             <button id="save-btn" class="btn btn-success" (click)="onSubmit()">
               Save

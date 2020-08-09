@@ -1,10 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpClient,
-  HttpHeaders,
-  HttpParams,
-  HttpEventType,
-} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Survey } from './models/survey.model';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs/';
@@ -13,8 +8,9 @@ import { Subject, throwError } from 'rxjs/';
   providedIn: 'root',
 })
 export class SurveyService {
-
   error = new Subject<string>();
+  survey = new Subject<Survey>();
+  newSurveyId = new Subject<string>();
 
   private DB_URL = 'https://survey-94d17.firebaseio.com/';
 
@@ -22,21 +18,30 @@ export class SurveyService {
 
   createSurvey(survey: Survey) {
     this.http
-      .post<{ name: string }>(
-        this.DB_URL + 'surveys.json',
-        survey,
-        {
-          observe: 'response',
-          responseType: 'json'
-        }
-      )
+      .post<{ name: string }>(this.DB_URL + 'surveys.json', survey, {
+        observe: 'response',
+        responseType: 'json',
+      })
       .subscribe(
         (responseData) => {
-          return responseData;
+          this.error.next('');
+          this.newSurveyId.next(responseData.body.name);
         },
         (error) => {
           this.error.next(error.message);
         }
       );
+  }
+
+  getSurvey(id: string) {
+    return this.http.get<Survey>(this.DB_URL + 'surveys' + id + '.json').pipe(
+      map((response) => {
+        this.survey.next(response);
+      }),
+      catchError((errorRes) => {
+        this.error.next('Unknown error occurred');
+        return throwError(errorRes);
+      })
+    );
   }
 }

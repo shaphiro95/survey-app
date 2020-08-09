@@ -1,24 +1,31 @@
 import { Survey } from './../models/survey.model';
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { jsonValidator } from '../utils/json.validator';
 import * as Ajv from 'ajv';
 import { HttpClient } from '@angular/common/http';
 import { SurveyService } from '../survey.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-new-survey',
   templateUrl: './new-survey.component.html',
   styleUrls: ['./new-survey.component.css'],
 })
-export class NewSurveyComponent implements OnInit {
+export class NewSurveyComponent implements OnInit, OnDestroy {
   @ViewChild('btnExample') exampleBtn: ElementRef;
+
+  private errorSub: Subscription;
+  private idSub: Subscription;
 
   surveyForm: FormGroup;
   jsonFormObject: any;
   isExampleVisible = false;
   isValid: any;
-  schemaErrors;
+  schemaErrors: any;
+  firebaseError: string;
+  newSurvey: Survey;
+  newSurveyId: string;
 
   constructor(private http: HttpClient, private surveyService: SurveyService) {}
 
@@ -29,6 +36,16 @@ export class NewSurveyComponent implements OnInit {
       .subscribe(schema => {
         this.jsonFormObject = JSON.parse(schema);
       });
+    this.errorSub = this.surveyService.error.subscribe(
+      (error) => {
+        this.firebaseError = error;
+      }
+    );
+    this.idSub = this.surveyService.newSurveyId.subscribe(
+      (surveyId) => {
+        this.newSurveyId = surveyId;
+      }
+    );
     this.initForm();
   }
 
@@ -62,10 +79,6 @@ export class NewSurveyComponent implements OnInit {
     this.surveyService.createSurvey(survey);
   }
 
-  onShow(): void {
-
-  }
-
   validateBySchema(data): void {
     const ajv = new Ajv();
     const validate = ajv.compile(this.jsonFormObject);
@@ -83,4 +96,8 @@ export class NewSurveyComponent implements OnInit {
     document.removeEventListener('copy', listener);
   }
 
+  ngOnDestroy(): void {
+    this.errorSub.unsubscribe();
+    this.idSub.unsubscribe();
+  }
 }
