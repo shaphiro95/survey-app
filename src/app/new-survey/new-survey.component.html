@@ -1,1 +1,85 @@
-Tu na razie jest ściernisko
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xs-20">
+      <div class="row">
+        <div class="col-xs-20">
+          <label for="survey-json">New Survey:</label>
+        </div>
+        <div class="col-xs-20">
+          <button
+            id="example-btn"
+            type="button"
+            class="btn btn-info"
+            #btnExample
+            (click)="showExample()"
+          >
+            Show Example
+          </button>
+        </div>
+      </div>
+      <div class="row" *ngIf="isExampleVisible">
+        <div class="col-xs-20">
+          <textarea id="example" readonly="true" disabled="true">
+    {
+      "title": "New survey",
+      "questions": [
+        {
+          "ordinal": 1,
+          "question": "Question 1?",
+          "answers": [
+            {
+              "ordinal": "a",
+              "answer": "Answer 1"
+            },
+            {
+              "ordinal": "b",
+              "answer": "Answer 2"
+            }
+          ]
+        }
+      ]
+    }
+          </textarea>
+        </div>
+      </div>
+      <form [formGroup]="surveyForm">
+        <div class="row">
+          <div class="col-xs-20">
+            <textarea
+              id="survey-json"
+              formControlName="survey"
+              class="form-control"
+              title="Parse json implementation of survey"
+            ></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-20">
+            <div
+              class="alert alert-danger"
+              role="alert"
+              *ngIf="
+                surveyForm.get('survey').touched &&
+                surveyForm.status !== 'VALID'
+              "
+            >
+              Given json is invalid!
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12">
+            <button id="show-btn" class="btn btn-primary" (click)="onShow()">
+              Show
+            </button>
+          </div>
+          <div class="col-xs-12">
+            <button id="save-btn" class="btn btn-success" (click)="onSubmit()">
+              Save
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

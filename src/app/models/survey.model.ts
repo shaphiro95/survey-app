@@ -1,11 +1,7 @@
-import { Question } from "./question.model";
+import { Question } from './question.model';
 
-export class Survey {
+export interface Survey {
   id: string;
+  title: string;
   questions: Question[];
-
-  constructor(id: string, questions: Question[]) {
-    this.id = id;
-    this.questions = questions;
-  }
 }

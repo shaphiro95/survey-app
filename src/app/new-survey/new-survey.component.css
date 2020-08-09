@@ -1,0 +1,36 @@
+#survey-json {
+  width: 40rem;
+  height: 30rem;
+}
+
+.row {
+  margin-left: 5rem;
+  margin-right: 5rem;
+}
+
+#example-btn {
+  margin-bottom: 0.5rem;
+  margin-left: 25rem;
+}
+
+#example {
+  width: 20rem;
+  height: 35rem;
+  margin-left: 10rem;
+  border: none;
+  background-color: white;
+  overflow: hidden;
+}
+
+button {
+  margin: 0.5rem;
+}
+
+#show-btn{
+  margin-left: 30rem;
+}
+
+.alert {
+  width: 40rem;
+  text-align: center;
+}
