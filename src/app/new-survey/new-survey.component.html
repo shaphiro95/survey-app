@@ -19,7 +19,7 @@
       </div>
       <div class="row" *ngIf="isExampleVisible">
         <div class="col-xs-20">
-          <textarea id="example" readonly="true" disabled="true">
+          <textarea id="example" type="text" readonly="true" disabled="true" #exampleTxtArea>
     {
       "title": "New survey",
       "questions": [
@@ -40,6 +40,11 @@
       ]
     }
           </textarea>
+        </div>
+        <div class="col-xs-12">
+          <button class="btn btn-light" (click)="copyInputMessage(exampleTxtArea)">
+            Copy
+          </button>
         </div>
       </div>
       <form [formGroup]="surveyForm">

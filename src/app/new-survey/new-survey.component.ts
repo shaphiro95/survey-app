@@ -73,4 +73,14 @@ export class NewSurveyComponent implements OnInit {
     this.schemaErrors = validate.errors;
   }
 
+  copyInputMessage(inputElement){
+    const listener = (e: ClipboardEvent) => {
+        e.clipboardData.setData('text/plain', (inputElement.value));
+        e.preventDefault();
+    };
+    document.addEventListener('copy', listener);
+    document.execCommand('copy');
+    document.removeEventListener('copy', listener);
+  }
+
 }
