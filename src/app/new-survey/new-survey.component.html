@@ -67,6 +67,20 @@
             </div>
           </div>
         </div>
+        <div *ngIf="!isValid">
+          <div *ngFor="let e of schemaErrors">
+            <div class="row">
+              <div class="col-xs-20">
+                <div
+                  class="alert alert-danger"
+                  role="alert"
+                >
+                  {{ e.dataPath}} {{ e.message }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="row">
           <div class="col-xs-12">
             <button id="show-btn" class="btn btn-primary" (click)="onShow()">

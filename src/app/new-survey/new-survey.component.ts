@@ -2,6 +2,9 @@ import { Survey } from './../models/survey.model';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { jsonValidator } from '../utils/json.validator';
+import * as Ajv from 'ajv';
+import { HttpClient } from '@angular/common/http';
+import { SurveyService } from '../survey.service';
 
 @Component({
   selector: 'app-new-survey',
@@ -12,12 +15,20 @@ export class NewSurveyComponent implements OnInit {
   @ViewChild('btnExample') exampleBtn: ElementRef;
 
   surveyForm: FormGroup;
-
+  jsonFormObject: any;
   isExampleVisible = false;
+  isValid: any;
+  schemaErrors;
 
-  constructor() {}
+  constructor(private http: HttpClient, private surveyService: SurveyService) {}
 
   ngOnInit(): void {
+    const schemaURL = `assets/schemas/survey.json`;
+    this.http
+      .get(schemaURL, { responseType: 'text' })
+      .subscribe(schema => {
+        this.jsonFormObject = JSON.parse(schema);
+      });
     this.initForm();
   }
 
@@ -35,12 +46,23 @@ export class NewSurveyComponent implements OnInit {
   }
 
   onSubmit(): void {
-    if(this.surveyForm.status !== 'VALID') {
+
+    if (this.surveyForm.status !== 'VALID') {
       return;
     }
 
     const survey: Survey  = JSON.parse(this.surveyForm.value.survey);
-    console.log(survey);
+
+    const ajv = new Ajv();
+    const validate = ajv.compile(this.jsonFormObject);
+    this.isValid = validate(survey);
+
+    if (!this.isValid) {
+      this.schemaErrors = validate.errors;
+      return;
+    }
+
+    this.surveyService.createSurvey(survey);
   }
 
   onShow(): void {

@@ -7,12 +7,14 @@ import { HeaderComponent } from './header/header.component';
 import { NewSurveyComponent } from './new-survey/new-survey.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { SurveyComponent } from './survey/survey.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
-    NewSurveyComponent
+    NewSurveyComponent,
+    SurveyComponent
   ],
   imports: [
     BrowserModule,
