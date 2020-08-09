@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Survey } from '../models/survey.model';
+import { FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'app-survey',
@@ -7,9 +9,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SurveyComponent implements OnInit {
 
+  @Input() survey: Survey;
+  @Input() surveyId: string;
+
+  surveyForm: FormGroup;
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  test() {
+    console.log(this.survey);
+    console.log(this.surveyId);
   }
 
 }

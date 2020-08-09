@@ -1,0 +1,45 @@
+<div class="shadow-lg p-1 mb-5 bg-white rounded bg-light">
+  <div class="container">
+    <form [formGroup]="surveyForm">
+      <div class="row">
+        <div class="col-xs-12">
+          <h1>{{ survey.title }}</h1>
+        </div>
+      </div>
+      <div *ngFor="let question of survey.questions; let i = index">
+        <div class="row">
+          <div class="col-xs-12">
+            <h3>{{ question.ordinal }}. {{ question.question }}</h3>
+          </div>
+        </div>
+        <div *ngFor="let answer of question.answers; let j = index">
+          <div class="row answer">
+            <div class="col-xs-12">
+              <input
+                [id]="'answer' + i + j"
+                class="form-check-input"
+                type="radio"
+                [name]="'answers_'+i"
+                [value]="answer.ordinal"
+              />
+              <input type="hidden" [value]="i" />
+              <label for="answer1"
+                >{{ answer.ordinal }}) {{ answer.answer }}</label
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div class="row ml-1">
+        <button
+          id="fill-btn"
+          class="btn btn-primary ml-auto mr-1"
+          (click)="test()"
+        >
+          Fill
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

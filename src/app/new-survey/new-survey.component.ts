@@ -18,7 +18,7 @@ export class NewSurveyComponent implements OnInit, OnDestroy {
   private errorSub: Subscription;
   private idSub: Subscription;
 
-  surveyForm: FormGroup;
+  newSurveyForm: FormGroup;
   jsonFormObject: any;
   isExampleVisible = false;
   isValid: any;
@@ -50,7 +50,7 @@ export class NewSurveyComponent implements OnInit, OnDestroy {
   }
 
   initForm() {
-    this.surveyForm = new FormGroup({
+    this.newSurveyForm = new FormGroup({
       survey: new FormControl('', Validators.compose([Validators.required, jsonValidator])),
     });
   }
@@ -64,19 +64,21 @@ export class NewSurveyComponent implements OnInit, OnDestroy {
 
   onSubmit(): void {
 
-    if (this.surveyForm.status !== 'VALID') {
+    this.firebaseError = '';
+
+    if (this.newSurveyForm.status !== 'VALID') {
       return;
     }
 
-    const survey = JSON.parse(this.surveyForm.value.survey);
+    const survey = JSON.parse(this.newSurveyForm.value.survey);
 
     this.validateBySchema(survey);
-
     if (!this.isValid) {
       return;
     }
-
     this.surveyService.createSurvey(survey);
+
+    this.newSurvey = survey;
   }
 
   validateBySchema(data): void {
