@@ -1,6 +1,6 @@
 <div class="shadow-lg p-1 mb-5 bg-white rounded bg-light">
   <div class="container">
-    <form [formGroup]="surveyForm">
+    <form (ngSubmit)="onSubmit()" #surveyForm="ngForm">
       <div class="row">
         <div class="col-xs-12">
           <h1>{{ survey.title }}</h1>
@@ -18,12 +18,13 @@
               <input
                 [id]="'answer' + i + j"
                 class="form-check-input"
+                ngModel
+                required
                 type="radio"
-                [name]="'answers_'+i"
+                [name]="question.ordinal"
                 [value]="answer.ordinal"
               />
-              <input type="hidden" [value]="i" />
-              <label for="answer1"
+              <label [for]="'answer' + i + j"
                 >{{ answer.ordinal }}) {{ answer.answer }}</label
               >
             </div>
@@ -35,7 +36,8 @@
         <button
           id="fill-btn"
           class="btn btn-primary ml-auto mr-1"
-          (click)="test()"
+          type="submit"
+          [disabled]="!surveyForm.valid"
         >
           Fill
         </button>

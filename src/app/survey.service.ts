@@ -3,11 +3,13 @@ import { HttpClient } from '@angular/common/http';
 import { Survey } from './models/survey.model';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs/';
+import { Result } from './models/result.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SurveyService {
+
   error = new Subject<string>();
   survey = new Subject<Survey>();
   newSurveyId = new Subject<string>();
@@ -26,6 +28,22 @@ export class SurveyService {
         (responseData) => {
           this.error.next('');
           this.newSurveyId.next(responseData.body.name);
+        },
+        (error) => {
+          this.error.next(error.message);
+        }
+      );
+  }
+
+  fillSurvey(survey: Result) {
+    this.http
+      .post<{ name: string }>(this.DB_URL + 'answers.json', survey, {
+        observe: 'response',
+        responseType: 'json',
+      })
+      .subscribe(
+        () => {
+          this.error.next('');
         },
         (error) => {
           this.error.next(error.message);
