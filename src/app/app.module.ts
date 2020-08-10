@@ -8,13 +8,17 @@ import { NewSurveyComponent } from './new-survey/new-survey.component';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { SurveyComponent } from './survey/survey.component';
+import { SurveyListComponent } from './survey-list/survey-list.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HeaderComponent,
     NewSurveyComponent,
-    SurveyComponent
+    SurveyComponent,
+    SurveyListComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,

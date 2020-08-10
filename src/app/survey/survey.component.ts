@@ -23,7 +23,6 @@ export class SurveyComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.surveyForm.value);
     const answers = [];
 
     for (const key of Object.keys(this.surveyForm.value)) {
