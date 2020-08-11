@@ -10,8 +10,14 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./survey-list.component.css'],
 })
 export class SurveyListComponent implements OnInit, OnDestroy {
+
+  surveyFilledSub: Subscription;
   surveysSub: Subscription;
+  surveyErrorSub: Subscription;
+
+  surveyFilled: string;
   surveys: SurveyFb[];
+  surveyError: string;
 
   constructor(
     private surveyService: SurveyService,
@@ -26,6 +32,16 @@ export class SurveyListComponent implements OnInit, OnDestroy {
         this.surveys = surveys;
       }
     );
+    this.surveyFilledSub = this.surveyService.surveyFilled.subscribe(
+      (filled) => {
+        this.surveyFilled = filled;
+      }
+    );
+    this.surveyErrorSub = this.surveyService.surveyError.subscribe(
+      (error: string) => {
+        this.surveyError = error;
+      }
+    );
   }
 
   fillSurvey(id: string) {
@@ -34,5 +50,7 @@ export class SurveyListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.surveysSub.unsubscribe();
+    this.surveyFilledSub.unsubscribe();
+    this.surveyErrorSub.unsubscribe();
   }
 }

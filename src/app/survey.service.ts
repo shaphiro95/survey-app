@@ -10,6 +10,8 @@ import { Result } from './models/result.model';
   providedIn: 'root',
 })
 export class SurveyService {
+
+  surveyFilled = new Subject<string>();
   error = new Subject<string>();
   surveyError = new Subject<string>();
   survey = new Subject<Survey>();
@@ -45,10 +47,14 @@ export class SurveyService {
       })
       .subscribe(
         () => {
-          this.error.next('');
+          this.surveyError.next('');
+          this.surveyFilled.next('Survey filled successfully!');
+          setTimeout(() => {
+            this.surveyFilled.next('');
+          }, 3500);
         },
         (error) => {
-          this.error.next(error.message);
+          this.surveyError.next(error.message);
         }
       );
   }

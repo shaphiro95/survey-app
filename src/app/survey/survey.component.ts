@@ -17,23 +17,16 @@ export class SurveyComponent implements OnInit, OnDestroy {
   @Input() surveyId: string;
 
   surveySub: Subscription;
-  surveyErrorSub: Subscription;
-  surveyError: string;
 
   @ViewChild('surveyForm') surveyForm: NgForm;
 
   constructor(
     private surveyService: SurveyService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.surveyErrorSub = this.surveyService.surveyError.subscribe(
-      (error: string) => {
-        this.surveyError = error;
-      }
-    );
-
     if (!this.survey) {
       this.route.params.subscribe((params: Params) => {
         this.surveyId = params['id'];
@@ -57,12 +50,13 @@ export class SurveyComponent implements OnInit, OnDestroy {
     const result = new Result(this.surveyId, answers);
 
     this.surveyService.fillSurvey(result);
+
+    this.router.navigate(['/survey'], { relativeTo: this.route });
   }
 
   ngOnDestroy() {
     if (this.surveySub) {
       this.surveySub.unsubscribe();
     }
-    this.surveyErrorSub.unsubscribe();
   }
 }
