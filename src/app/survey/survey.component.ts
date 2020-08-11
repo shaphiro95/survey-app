@@ -1,25 +1,51 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, OnDestroy } from '@angular/core';
 import { Survey } from '../models/survey.model';
 import { NgForm } from '@angular/forms';
 import { SurveyAnswer } from '../models/surveyanswer.model';
 import { Result } from '../models/result.model';
 import { SurveyService } from '../survey.service';
+import { Subscription } from 'rxjs';
+import { ActivatedRoute, Router, Params } from '@angular/router';
 
 @Component({
   selector: 'app-survey',
   templateUrl: './survey.component.html',
-  styleUrls: ['./survey.component.css']
+  styleUrls: ['./survey.component.css'],
 })
-export class SurveyComponent implements OnInit {
-
+export class SurveyComponent implements OnInit, OnDestroy {
   @Input() survey: Survey;
   @Input() surveyId: string;
 
+  surveySub: Subscription;
+  surveyErrorSub: Subscription;
+  surveyError: string;
+
   @ViewChild('surveyForm') surveyForm: NgForm;
 
-  constructor(private surveyService: SurveyService) { }
+  constructor(
+    private surveyService: SurveyService,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit(): void {
+
+    this.surveyErrorSub = this.surveyService.surveyError.subscribe(
+      (error: string) => {
+        this.surveyError = error;
+      }
+    );
+
+    if (!this.survey) {
+      this.route.params.subscribe((params: Params) => {
+        this.surveyId = params['id'];
+        this.surveyService.fetchSurvey(this.surveyId);
+        this.surveySub = this.surveyService.survey.subscribe(
+          (survey: Survey) => {
+            this.survey = survey;
+          }
+        );
+      });
+    }
   }
 
   onSubmit() {
@@ -32,5 +58,9 @@ export class SurveyComponent implements OnInit {
     const result = new Result(this.surveyId, answers);
 
     this.surveyService.fillSurvey(result);
+  }
+
+  ngOnDestroy() {
+    this.surveySub.unsubscribe();
   }
 }

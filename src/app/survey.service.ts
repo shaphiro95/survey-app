@@ -54,15 +54,18 @@ export class SurveyService {
       );
   }
 
-  getSurvey(id: string) {
-    this.http.get<Survey>(this.DB_URL + 'surveys' + id + '.json').pipe(
-      map((response) => {
-        this.survey.next(response);
-      }),
+  fetchSurvey(id: string) {
+    this.http.get<Survey>(this.DB_URL + 'surveys/' + id + '.json').pipe(
       catchError((errorRes) => {
-        this.error.next('Unknown error occurred');
+        this.surveyError.next('Cannot retrieve survey with id: ' + id);
         return throwError(errorRes);
       })
+    ).subscribe(
+      (survey: Survey) => {
+        console.log(survey);
+        this.surveyError.next('');
+        this.survey.next(survey);
+      }
     );
   }
 
@@ -83,7 +86,8 @@ export class SurveyService {
         return throwError(errorRes);
       })
     ).subscribe(
-      (surveys) => {
+      (surveys: SurveyFb[]) => {
+        this.surveyError.next('');
         this.surveys.next(surveys);
       }
     );
