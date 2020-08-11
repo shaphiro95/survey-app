@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, ɵConsole } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Survey } from './models/survey.model';
 import { SurveyFb } from './models/survey-fb.model';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs/';
 import { Result } from './models/result.model';
 
@@ -10,6 +10,7 @@ import { Result } from './models/result.model';
   providedIn: 'root',
 })
 export class SurveyService {
+
   error = new Subject<string>();
   surveyError = new Subject<string>();
   survey = new Subject<Survey>();
@@ -54,7 +55,7 @@ export class SurveyService {
   }
 
   getSurvey(id: string) {
-    return this.http.get<Survey>(this.DB_URL + 'surveys' + id + '.json').pipe(
+    this.http.get<Survey>(this.DB_URL + 'surveys' + id + '.json').pipe(
       map((response) => {
         this.survey.next(response);
       }),
@@ -66,14 +67,25 @@ export class SurveyService {
   }
 
   fetchSurveys() {
-    return this.http.get<SurveyFb[]>(this.DB_URL + 'surveys.json').pipe(
+    this.http.get<SurveyFb[]>(this.DB_URL + 'surveys.json').pipe(
       map((response) => {
-        this.surveys.next(response);
+        const surveys = [];
+
+        for (const key of Object.keys(response)) {
+          surveys.push(
+            new SurveyFb(key, response[key])
+          );
+        }
+        return surveys;
       }),
       catchError((errorRes) => {
         this.surveyError.next('Unknown error occurred');
         return throwError(errorRes);
       })
+    ).subscribe(
+      (surveys) => {
+        this.surveys.next(surveys);
+      }
     );
   }
 }

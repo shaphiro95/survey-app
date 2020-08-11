@@ -3,12 +3,15 @@ import { Routes, RouterModule } from '@angular/router';
 import { NewSurveyComponent } from './new-survey/new-survey.component';
 import { SurveyListComponent } from './survey-list/survey-list.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { SurveyComponent } from './survey/survey.component';
 
 
 const routes: Routes = [
   { path: '',   redirectTo: '/survey', pathMatch: 'full' },
   { path: 'new', component: NewSurveyComponent },
-  { path: 'survey', component: SurveyListComponent },
+  { path: 'survey', component: SurveyListComponent, children: [
+    {path: ':id', component: SurveyComponent}
+  ]},
   { path: '**', component: PageNotFoundComponent }
 ];
 
