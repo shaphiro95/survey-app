@@ -39,7 +39,7 @@ export class SurveyService {
       );
   }
 
-  fillSurvey(survey: Result) {
+  fillSurvey(survey: Result, title: string) {
     this.http
       .post<{ name: string }>(this.DB_URL + 'answers.json', survey, {
         observe: 'response',
@@ -48,7 +48,7 @@ export class SurveyService {
       .subscribe(
         () => {
           this.surveyError.next('');
-          this.surveyFilled.next('Survey filled successfully!');
+          this.surveyFilled.next(title + ' filled successfully!');
           setTimeout(() => {
             this.surveyFilled.next('');
           }, 3500);

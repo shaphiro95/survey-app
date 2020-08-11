@@ -49,7 +49,7 @@ export class SurveyComponent implements OnInit, OnDestroy {
 
     const result = new Result(this.surveyId, answers);
 
-    this.surveyService.fillSurvey(result);
+    this.surveyService.fillSurvey(result, this.survey.title);
 
     this.router.navigate(['/survey'], { relativeTo: this.route });
   }
