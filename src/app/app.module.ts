@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { SurveyComponent } from './survey/survey.component';
 import { SurveyListComponent } from './survey-list/survey-list.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { SurveyResultComponent } from './survey-result/survey-result.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { PageNotFoundComponent } from './page-not-found/page-not-found.component
     NewSurveyComponent,
     SurveyComponent,
     SurveyListComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
+    SurveyResultComponent
   ],
   imports: [
     BrowserModule,
