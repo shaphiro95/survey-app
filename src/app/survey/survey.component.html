@@ -1,6 +1,6 @@
 <div class="shadow-lg p-1 mb-5 bg-white rounded bg-light">
   <div class="container">
-    <form (ngSubmit)="onSubmit()" #surveyForm="ngForm">
+    <form (ngSubmit)="onSubmit()" #surveyForm="ngForm" *ngIf="survey">
       <div class="row">
         <div class="col-xs-12">
           <h1>{{ survey.title }}</h1>
@@ -43,5 +43,12 @@
         </button>
       </div>
     </form>
+    <div class="row" *ngIf="surveyError">
+      <div class="col-xs-20">
+        <div class="alert alert-danger" role="alert">
+          {{ surveyError }}
+        </div>
+      </div>
+    </div>
   </div>
 </div>

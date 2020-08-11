@@ -28,7 +28,6 @@ export class SurveyComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-
     this.surveyErrorSub = this.surveyService.surveyError.subscribe(
       (error: string) => {
         this.surveyError = error;
@@ -61,6 +60,9 @@ export class SurveyComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.surveySub.unsubscribe();
+    if (this.surveySub) {
+      this.surveySub.unsubscribe();
+    }
+    this.surveyErrorSub.unsubscribe();
   }
 }

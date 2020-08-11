@@ -10,7 +10,6 @@ import { Result } from './models/result.model';
   providedIn: 'root',
 })
 export class SurveyService {
-
   error = new Subject<string>();
   surveyError = new Subject<string>();
   survey = new Subject<Survey>();
@@ -55,41 +54,40 @@ export class SurveyService {
   }
 
   fetchSurvey(id: string) {
-    this.http.get<Survey>(this.DB_URL + 'surveys/' + id + '.json').pipe(
-      catchError((errorRes) => {
-        this.surveyError.next('Cannot retrieve survey with id: ' + id);
-        return throwError(errorRes);
-      })
-    ).subscribe(
-      (survey: Survey) => {
-        console.log(survey);
-        this.surveyError.next('');
-        this.survey.next(survey);
-      }
-    );
+    this.http
+      .get<Survey>(this.DB_URL + 'surveys/' + id + '.json')
+      .pipe(
+        catchError((errorRes) => {
+          this.surveyError.next('Undefined error occured');
+          return throwError(errorRes);
+        })
+      )
+      .subscribe((survey: Survey) => {
+        if (!survey) {
+          this.surveyError.next('Cannot retrieve survey with id: ' + id);
+        } else {
+          this.surveyError.next('');
+          this.survey.next(survey);
+        }
+      });
   }
 
   fetchSurveys() {
-    this.http.get<SurveyFb[]>(this.DB_URL + 'surveys.json').pipe(
-      map((response) => {
-        const surveys = [];
+    this.http
+      .get<SurveyFb[]>(this.DB_URL + 'surveys.json')
+      .pipe(
+        map((response) => {
+          const surveys = [];
 
-        for (const key of Object.keys(response)) {
-          surveys.push(
-            new SurveyFb(key, response[key])
-          );
-        }
-        return surveys;
-      }),
-      catchError((errorRes) => {
-        this.surveyError.next('Unknown error occurred');
-        return throwError(errorRes);
-      })
-    ).subscribe(
-      (surveys: SurveyFb[]) => {
+          for (const key of Object.keys(response)) {
+            surveys.push(new SurveyFb(key, response[key]));
+          }
+          return surveys;
+        })
+      )
+      .subscribe((surveys: SurveyFb[]) => {
         this.surveyError.next('');
         this.surveys.next(surveys);
-      }
-    );
+      });
   }
 }
