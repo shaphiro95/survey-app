@@ -48,6 +48,10 @@ export class SurveyListComponent implements OnInit, OnDestroy {
     this.router.navigate([id], { relativeTo: this.route });
   }
 
+  showResults(id: string) {
+    this.router.navigate([id, 'result'], { relativeTo: this.route });
+  }
+
   ngOnDestroy(): void {
     this.surveysSub.unsubscribe();
     this.surveyFilledSub.unsubscribe();

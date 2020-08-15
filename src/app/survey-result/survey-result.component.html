@@ -1,1 +1,31 @@
-<p>survey-result works!</p>
+
+<div class="result shadow-lg p-1 mb-5 bg-white rounded bg-light" *ngIf="result">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h3>Results for survey {{ result.title }}</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-xs-12">
+        <p>Answered: {{ result.answered }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="result shadow-lg p-1 mb-5 bg-white rounded bg-light" *ngIf="!result">
+  <div class="container">
+    <div class="row">
+      <div class="col-xs-12">
+        <h1>
+          There are no answers for this survey
+        </h1>
+      </div>
+    </div>
+  </div>
+  <div class="row ml-1">
+      <button class="btn btn-info ml-auto mr-5" (click)="fill()">
+        Fill
+      </button>
+  </div>
+</div>

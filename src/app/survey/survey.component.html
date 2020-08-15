@@ -1,13 +1,13 @@
-<div class="shadow-lg p-1 mb-5 bg-white rounded bg-light">
+<div class="survey shadow-lg p-1 mb-5 bg-white rounded bg-light">
   <div class="container">
     <form (ngSubmit)="onSubmit()" #surveyForm="ngForm" *ngIf="survey">
-      <div class="row">
+      <div class="row title">
         <div class="col-xs-12">
           <h1>{{ survey.title }}</h1>
         </div>
       </div>
       <div *ngFor="let question of survey.questions; let i = index">
-        <div class="row">
+        <div class="row question">
           <div class="col-xs-12">
             <h3>{{ question.ordinal }}. {{ question.question }}</h3>
           </div>
