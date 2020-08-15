@@ -29,7 +29,7 @@ export class SurveyComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (!this.survey) {
       this.route.params.subscribe((params: Params) => {
-        this.surveyId = params['id'];
+        this.surveyId = params.id;
         this.surveyService.fetchSurvey(this.surveyId);
       });
       this.surveySub = this.surveyService.survey.subscribe(
