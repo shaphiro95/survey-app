@@ -1,13 +1,10 @@
-import { Injectable, ɵConsole } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Survey } from './models/survey.model';
 import { SurveyFb } from './models/survey-fb.model';
-import { map,  reduce, catchError } from 'rxjs/operators';
+import { map, catchError } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs/';
 import { Result } from './models/result.model';
-import { AnswerResult } from './models/answer-result.model';
-import { QuestionResult } from './models/question-result.model';
-import { SurveyResult } from './models/survey-result.model';
 
 @Injectable({
   providedIn: 'root',

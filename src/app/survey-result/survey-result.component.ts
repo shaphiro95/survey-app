@@ -3,8 +3,6 @@ import { ActivatedRoute, Router, Params } from '@angular/router';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AnswersService } from '../answers.service';
 import { SurveyResult } from '../models/survey-result.model';
-import { Survey } from '../models/survey.model';
-import { SurveyService } from '../survey.service';
 
 @Component({
   selector: 'app-survey-result',
