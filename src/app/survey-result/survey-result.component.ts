@@ -17,23 +17,18 @@ export class SurveyResultComponent implements OnInit, OnDestroy {
   surveySub: Subscription;
   result: SurveyResult;
   survey: Survey;
-  paramsSub: Subscription;
 
   constructor(
     private answerService: AnswersService,
-    private surveyService: SurveyService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.paramsSub = this.route.params.subscribe((params: Params) => {
+
+    this.route.params.subscribe((params: Params) => {
       this.surveyId = params['id'];
-      this.prepareData();
-    });
-    this.surveySub = this.surveyService.survey.subscribe((survey: Survey) => {
-      this.survey = survey;
-      this.answerService.getResult(this.surveyId, this.survey);
+      this.answerService.fetchResult(this.surveyId);
     });
     this.resultSub = this.answerService.surveyResult.subscribe(
       (result: SurveyResult) => {
@@ -42,17 +37,11 @@ export class SurveyResultComponent implements OnInit, OnDestroy {
     );
   }
 
-  prepareData(): void {
-    this.surveyService.fetchSurvey(this.surveyId);
-  }
-
   fill() {
     this.router.navigate(['..'], { relativeTo: this.route });
   }
 
   ngOnDestroy(): void {
     this.resultSub.unsubscribe();
-    this.surveySub.unsubscribe();
-    this.paramsSub.unsubscribe();
   }
 }

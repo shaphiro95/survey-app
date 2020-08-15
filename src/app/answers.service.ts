@@ -12,8 +12,9 @@ import { map, catchError } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AnswersService {
-  result: SurveyResult;
+
   surveyResult = new Subject<SurveyResult>();
+  survey: Survey;
 
   private DB_URL = 'https://survey-94d17.firebaseio.com/';
 
@@ -25,9 +26,13 @@ export class AnswersService {
     searchParams = searchParams.append('equalTo', '"' + surveyId + '"');
 
     this.http
-      .get<SurveyResult>(this.DB_URL + 'answers.json', { params: searchParams })
+      .get<any>(this.DB_URL + 'answers.json', { params: searchParams })
       .pipe(
         map((response) => {
+          if (Object.keys(response).length === 0) {
+            return null;
+          }
+
           const results = [];
 
           for (const key of Object.keys(response)) {
@@ -45,7 +50,7 @@ export class AnswersService {
           }
 
           const questRes: QuestionResult[] = [];
-          let answered: number = 0;
+          let answered = 0;
           for (const key of Object.keys(grouped)) {
             const ansRes: AnswerResult[] = [];
             for (const [ans, score] of Object.entries(grouped[key])) {
@@ -57,40 +62,37 @@ export class AnswersService {
 
           answered = answered / Object.keys(grouped).length;
 
-          return new SurveyResult(answered, questRes);
+          return this.prepareResult(new SurveyResult(answered, questRes));
         })
       )
       .subscribe((result) => {
-        this.result = result;
+        this.surveyResult.next(result);
       });
   }
 
-  getResult(surveyId: string, survey: Survey) {
-    this.fetchResult(surveyId);
-    this.prepareResult(survey, this.result);
-  }
-
-  prepareResult(survey: Survey, result: SurveyResult) {
-
-    if ( !survey || !result) {
-      return;
+  prepareResult(result: SurveyResult): SurveyResult {
+    if (!this.survey || !result) {
+      return null;
     }
 
-    result.title = survey.title;
+    result.title = this.survey.title;
 
-    for (const survQuestion of survey.questions) {
+    for (const survQuestion of this.survey.questions) {
       for (const resQuestion of result.questions) {
         if (resQuestion.ordinal === survQuestion.ordinal) {
           resQuestion.question = survQuestion.question;
-          resQuestion.answers = this.prepareAnswers(survQuestion.answers, resQuestion.answers);
+          resQuestion.answers = this.prepareAnswers(
+            survQuestion.answers,
+            resQuestion.answers
+          );
         }
       }
     }
-    this.surveyResult.next(result);
+
+    return result;
   }
 
   prepareAnswers(survAns: Answer[], resAns: AnswerResult[]): AnswerResult[] {
-
     const answers: AnswerResult[] = [];
 
     for (const survAnswer of survAns) {

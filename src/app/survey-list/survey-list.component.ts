@@ -1,8 +1,10 @@
+import { AnswersService } from './../answers.service';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { SurveyService } from '../survey.service';
 import { Subscription } from 'rxjs';
 import { SurveyFb } from '../models/survey-fb.model';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Survey } from '../models/survey.model';
 
 @Component({
   selector: 'app-survey-list',
@@ -20,6 +22,7 @@ export class SurveyListComponent implements OnInit, OnDestroy {
   surveyError: string;
 
   constructor(
+    private answerService: AnswersService,
     private surveyService: SurveyService,
     private router: Router,
     private route: ActivatedRoute
@@ -48,8 +51,10 @@ export class SurveyListComponent implements OnInit, OnDestroy {
     this.router.navigate([id], { relativeTo: this.route });
   }
 
-  showResults(id: string) {
-    this.router.navigate([id, 'result'], { relativeTo: this.route });
+  showResults(surveyFb: SurveyFb) {
+    const survey: Survey = surveyFb.survey;
+    this.answerService.survey = survey;
+    this.router.navigate([surveyFb.id, 'result'], { relativeTo: this.route });
   }
 
   ngOnDestroy(): void {

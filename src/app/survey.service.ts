@@ -2,7 +2,7 @@ import { Injectable, ɵConsole } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Survey } from './models/survey.model';
 import { SurveyFb } from './models/survey-fb.model';
-import { map, catchError, reduce } from 'rxjs/operators';
+import { map,  reduce, catchError } from 'rxjs/operators';
 import { Subject, throwError } from 'rxjs/';
 import { Result } from './models/result.model';
 import { AnswerResult } from './models/answer-result.model';
@@ -92,6 +92,9 @@ export class SurveyService {
             surveys.push(new SurveyFb(key, response[key]));
           }
           return surveys;
+        }), catchError((errorRes) => {
+          this.surveyError.next(errorRes.error.error);
+          return throwError(errorRes);
         })
       )
       .subscribe((surveys: SurveyFb[]) => {

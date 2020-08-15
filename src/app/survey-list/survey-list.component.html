@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div *ngIf="surveyFilled" class="row">
+  <div *ngIf="surveyFilled && !surveyError" class="row">
     <div class="alert alert-success" role="alert">
       {{ surveyFilled }}
     </div>
@@ -9,7 +9,7 @@
       {{ surveyError }}
     </div>
   </div>
-  <div *ngIf="!surveys">
+  <div *ngIf="!surveys && !surveyError">
     <div class="row">
       <h4>Currently there are no surveys available</h4>
     </div>
@@ -60,7 +60,7 @@
             </td>
             <td>
               <svg
-                (click)="showResults(survey.id)"
+                (click)="showResults(survey)"
                 width="1em"
                 height="1em"
                 viewBox="0 0 16 16"
@@ -83,7 +83,7 @@
       </table>
     </div>
     <div class="col-xs-20">
-      <div class="row">
+      <div class="row" *ngIf="!surveyError">
         <router-outlet></router-outlet>
       </div>
     </div>

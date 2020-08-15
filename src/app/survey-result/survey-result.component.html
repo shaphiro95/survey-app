@@ -3,12 +3,27 @@
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
-        <h3>Results for survey {{ result.title }}</h3>
+        <h3>Results for survey: {{ result.title }}</h3>
       </div>
     </div>
     <div class="row">
       <div class="col-xs-12">
         <p>Answered: {{ result.answered }}</p>
+      </div>
+    </div>
+    <div *ngFor="let question of result.questions; let i = index">
+      <div class="row question">
+        <div class="col-xs-12">
+          <h3>{{ question.ordinal }}. {{ question.question }}</h3>
+        </div>
+      </div>
+      <div *ngFor="let answer of question.answers; let j = index">
+        <div class="row answer">
+          <div class="col-xs-12">
+            <p>{{ answer.ordinal }}) {{ answer.answer }} - {{ (answer.result / result.answered) * 100 | number:'1.0-2' }}%</p
+            >
+          </div>
+        </div>
       </div>
     </div>
   </div>

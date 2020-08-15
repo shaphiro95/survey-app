@@ -31,12 +31,12 @@ export class SurveyComponent implements OnInit, OnDestroy {
       this.route.params.subscribe((params: Params) => {
         this.surveyId = params['id'];
         this.surveyService.fetchSurvey(this.surveyId);
-        this.surveySub = this.surveyService.survey.subscribe(
-          (survey: Survey) => {
-            this.survey = survey;
-          }
-        );
       });
+      this.surveySub = this.surveyService.survey.subscribe(
+        (survey: Survey) => {
+          this.survey = survey;
+        }
+      );
     }
   }
 
