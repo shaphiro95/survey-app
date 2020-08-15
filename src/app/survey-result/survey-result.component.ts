@@ -14,9 +14,9 @@ import { SurveyService } from '../survey.service';
 export class SurveyResultComponent implements OnInit, OnDestroy {
   surveyId: string;
   resultSub: Subscription;
-  surveySub: Subscription;
+  errorSub: Subscription;
   result: SurveyResult;
-  survey: Survey;
+  error: string;
 
   constructor(
     private answerService: AnswersService,
@@ -33,6 +33,11 @@ export class SurveyResultComponent implements OnInit, OnDestroy {
     this.resultSub = this.answerService.surveyResult.subscribe(
       (result: SurveyResult) => {
         this.result = result;
+      }
+    );
+    this.errorSub = this.answerService.errorSub.subscribe(
+      (error: string) => {
+        this.error = error;
       }
     );
   }

@@ -1,7 +1,7 @@
 import { Answer } from './models/answer.model';
 import { Survey } from './models/survey.model';
 import { HttpParams, HttpClient } from '@angular/common/http';
-import { Subject } from 'rxjs/';
+import { Subject, throwError } from 'rxjs/';
 import { Injectable } from '@angular/core';
 import { SurveyResult } from './models/survey-result.model';
 import { AnswerResult } from './models/answer-result.model';
@@ -14,6 +14,7 @@ import { map, catchError } from 'rxjs/operators';
 export class AnswersService {
 
   surveyResult = new Subject<SurveyResult>();
+  errorSub = new Subject<string>();
   survey: Survey;
 
   private DB_URL = 'https://survey-94d17.firebaseio.com/';
@@ -63,9 +64,17 @@ export class AnswersService {
           answered = answered / Object.keys(grouped).length;
 
           return this.prepareResult(new SurveyResult(answered, questRes));
+        }), catchError((errorRes) => {
+          if (errorRes.error.error) {
+            this.errorSub.next(errorRes.error.error);
+          } else {
+            this.errorSub.next('Undefined error occured.');
+          }
+          return throwError(errorRes);
         })
       )
       .subscribe((result) => {
+        this.errorSub.next('');
         this.surveyResult.next(result);
       });
   }

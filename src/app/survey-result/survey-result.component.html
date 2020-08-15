@@ -1,5 +1,5 @@
 
-<div class="result shadow-lg p-1 mb-5 bg-white rounded bg-light" *ngIf="result">
+<div class="result shadow-lg p-1 mb-5 bg-white rounded bg-light" *ngIf="result && !error">
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
@@ -28,7 +28,7 @@
     </div>
   </div>
 </div>
-<div class="result shadow-lg p-1 mb-5 bg-white rounded bg-light" *ngIf="!result">
+<div class="result shadow-lg p-1 mb-5 bg-white rounded bg-light" *ngIf="!result && !error">
   <div class="container">
     <div class="row">
       <div class="col-xs-12">
@@ -42,5 +42,12 @@
       <button class="btn btn-info ml-auto mr-5" (click)="fill()">
         Fill
       </button>
+  </div>
+</div>
+<div class="container" *ngIf="error">
+  <div class="row">
+    <div class="alert alert-danger" role="alert">
+      {{ error }}
+    </div>
   </div>
 </div>
