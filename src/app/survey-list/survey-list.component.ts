@@ -13,6 +13,8 @@ import { Survey } from '../models/survey.model';
 })
 export class SurveyListComponent implements OnInit, OnDestroy {
 
+  filtr = '';
+
   surveyFilledSub: Subscription;
   surveysSub: Subscription;
   surveyErrorSub: Subscription;

@@ -11,6 +11,7 @@ import { SurveyComponent } from './survey/survey.component';
 import { SurveyListComponent } from './survey-list/survey-list.component';
 import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
 import { SurveyResultComponent } from './survey-result/survey-result.component';
+import { FiltrPipe } from './filtr.pipe';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { SurveyResultComponent } from './survey-result/survey-result.component';
     SurveyComponent,
     SurveyListComponent,
     PageNotFoundComponent,
-    SurveyResultComponent
+    SurveyResultComponent,
+    FiltrPipe
   ],
   imports: [
     BrowserModule,

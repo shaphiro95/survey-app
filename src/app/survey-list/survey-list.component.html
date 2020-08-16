@@ -22,6 +22,14 @@
     </div>
   </div>
   <div class="row">
+    <div class="col-xs-12">
+      <p>Search:</p>
+    </div>
+    <div class="col-xs-12 search">
+      <input id="search" [(ngModel)]="filtr" title="search survey by title" class="form-control" type="text">
+    </div>
+  </div>
+  <div class="row">
     <div class="col-xs-20">
       <table class="table" *ngIf="surveys">
         <thead class="thead-dark">
@@ -33,7 +41,7 @@
             <th scope="col">Show Result</th>
           </tr>
         </thead>
-        <tbody *ngFor="let survey of surveys; let i = index">
+        <tbody *ngFor="let survey of surveys | filtr: filtr; let i = index">
           <tr>
             <th scope="row">{{ i + 1 }}</th>
             <td>{{ survey.survey.title }}</td>
