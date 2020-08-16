@@ -1,5 +1,11 @@
 import { Survey } from './../models/survey.model';
-import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  OnDestroy,
+} from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { jsonValidator } from '../utils/json.validator';
 import * as Ajv from 'ajv';
@@ -31,27 +37,24 @@ export class NewSurveyComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     const schemaURL = `assets/schemas/survey.json`;
-    this.http
-      .get(schemaURL, { responseType: 'text' })
-      .subscribe(schema => {
-        this.jsonFormObject = JSON.parse(schema);
-      });
-    this.errorSub = this.surveyService.error.subscribe(
-      (error) => {
-        this.firebaseError = error;
-      }
-    );
-    this.idSub = this.surveyService.newSurveyId.subscribe(
-      (surveyId) => {
-        this.newSurveyId = surveyId;
-      }
-    );
+    this.http.get(schemaURL, { responseType: 'text' }).subscribe((schema) => {
+      this.jsonFormObject = JSON.parse(schema);
+    });
+    this.errorSub = this.surveyService.error.subscribe((error) => {
+      this.firebaseError = error;
+    });
+    this.idSub = this.surveyService.newSurveyId.subscribe((surveyId) => {
+      this.newSurveyId = surveyId;
+    });
     this.initForm();
   }
 
   initForm() {
     this.newSurveyForm = new FormGroup({
-      survey: new FormControl('', Validators.compose([Validators.required, jsonValidator])),
+      survey: new FormControl(
+        '',
+        Validators.compose([Validators.required, jsonValidator])
+      ),
     });
   }
 
@@ -63,19 +66,25 @@ export class NewSurveyComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
-
     this.firebaseError = '';
 
     if (this.newSurveyForm.status !== 'VALID') {
       return;
     }
 
-    const survey = JSON.parse(this.newSurveyForm.value.survey);
+    let survey = JSON.parse(this.newSurveyForm.value.survey);
 
     this.validateBySchema(survey);
     if (!this.isValid) {
       return;
     }
+    survey = this.validateAndSort(survey);
+
+    if (survey === null) {
+      this.firebaseError = 'Ordinal value must be unique in scope!';
+      return;
+    }
+
     this.surveyService.createSurvey(survey);
 
     this.newSurvey = survey;
@@ -88,14 +97,53 @@ export class NewSurveyComponent implements OnInit, OnDestroy {
     this.schemaErrors = validate.errors;
   }
 
-  copyInputMessage(inputElement){
+  copyInputMessage(inputElement) {
     const listener = (e: ClipboardEvent) => {
-        e.clipboardData.setData('text/plain', (inputElement.value));
-        e.preventDefault();
+      e.clipboardData.setData('text/plain', inputElement.value);
+      e.preventDefault();
     };
     document.addEventListener('copy', listener);
     document.execCommand('copy');
     document.removeEventListener('copy', listener);
+  }
+
+  validateAndSort(survey: any): Survey {
+    if (!this.checkOrdinalUnique(survey.questions)) {
+      return null;
+    }
+    survey.questions = this.sortByOrdinal(survey.questions);
+
+    for (const question of survey.questions) {
+      if (!this.checkOrdinalUnique(question.answers)) {
+        return null;
+      }
+      question.answers = this.sortByOrdinal(question.answers);
+    }
+
+    return survey;
+  }
+
+  sortByOrdinal(array: any[]): any[] {
+    array = array.sort((a, b) => (a.ordinal > b.ordinal ? 1 : -1));
+    return array;
+  }
+
+  checkOrdinalUnique(array: any[]): boolean {
+    let lastOrdinal = array[0].ordinal;
+    let firstLoop = true;
+
+    for (const element of array) {
+      if (!firstLoop) {
+        if (element.ordinal === lastOrdinal) {
+          return false;
+        }
+        lastOrdinal = element.ordinal;
+      }
+
+      firstLoop = false;
+    }
+
+    return true;
   }
 
   ngOnDestroy(): void {
