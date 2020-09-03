@@ -17,7 +17,7 @@ export class AnswersService {
   errorSub = new Subject<string>();
   survey: Survey;
 
-  private DB_URL = 'https://survey-94d17.firebaseio.com/';
+  private DB_URL = 'https://survey-app-1ecac.firebaseio.com/';
 
   constructor(private http: HttpClient) {}
 

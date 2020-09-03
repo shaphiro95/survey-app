@@ -18,7 +18,7 @@ export class SurveyService {
   surveys = new Subject<SurveyFb[]>();
   newSurveyId = new Subject<string>();
 
-  private DB_URL = 'https://survey-94d17.firebaseio.com/';
+  private DB_URL = 'https://survey-app-1ecac.firebaseio.com/';
 
   constructor(private http: HttpClient) {}
 
